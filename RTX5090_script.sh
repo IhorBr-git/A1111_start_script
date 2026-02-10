@@ -1,5 +1,5 @@
 #!/bin/bash
-gi
+
 # -- Installation & Start Script ---
 # Base image: runpod/pytorch:2.4.0-py3.11-cuda12.4.1-devel-ubuntu22.04
 # This script installs and launches AUTOMATIC1111 Stable Diffusion WebUI
@@ -40,8 +40,10 @@ if [ ! -d "$WEBUI_DIR/venv" ]; then
     python3.11 -m venv "$WEBUI_DIR/venv"
 fi
 echo "Installing build dependencies in venv..."
-"$WEBUI_DIR/venv/bin/pip" install --upgrade pip setuptools wheel
-# Pre-install CLIP without build isolation to avoid pkg_resources error
+"$WEBUI_DIR/venv/bin/pip" install --upgrade pip wheel
+# Pin setuptools to 69.5.1 — newer versions break pkg_resources imports needed by CLIP
+"$WEBUI_DIR/venv/bin/pip" install "setuptools==69.5.1"
+# Pre-install CLIP without build isolation to use the venv's setuptools
 echo "Pre-installing CLIP..."
 "$WEBUI_DIR/venv/bin/pip" install --no-build-isolation https://github.com/openai/CLIP/archive/d50d76daa670286dd6cacf3bcd80b5e4823fc8e1.zip
 
