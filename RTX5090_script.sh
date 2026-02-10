@@ -26,17 +26,18 @@ else
 fi
 
 # ---- Configure webui-user.sh ----
-# python_cmd set to python3.11 as per A1111 docs for newer systems
 echo "Configuring webui-user.sh..."
 cat > "$WEBUI_DIR/webui-user.sh" << 'EOF'
 #!/bin/bash
 python_cmd="python3.11"
 # Stability-AI repos were made private (Dec 2025) — use community mirrors
 export STABLE_DIFFUSION_REPO="https://github.com/w-e-w/stablediffusion.git"
+# Keep torch+xformers from the cu124 index so A1111 doesn't reinstall from PyPI
+export TORCH_COMMAND="pip install torch torchvision xformers --index-url https://download.pytorch.org/whl/cu124"
 export COMMANDLINE_ARGS="--listen --port 3000 --xformers --enable-insecure-extension-access --no-half-vae --api"
 EOF
 
-# ---- Pre-create venv and fix Python 3.11 build dependencies ----
+# ---- Pre-create venv and install matched torch + xformers ----
 echo "Setting up Python venv..."
 if [ ! -d "$WEBUI_DIR/venv" ]; then
     python3.11 -m venv "$WEBUI_DIR/venv"
@@ -45,9 +46,18 @@ echo "Installing build dependencies in venv..."
 "$WEBUI_DIR/venv/bin/pip" install --upgrade pip wheel
 # Pin setuptools to 69.5.1 — newer versions break pkg_resources imports needed by CLIP
 "$WEBUI_DIR/venv/bin/pip" install "setuptools==69.5.1"
-# Pre-install CLIP without build isolation to use the venv's setuptools
+
+# Install torch + torchvision + xformers from the SAME cu124 index
+# This guarantees they are built for the same PyTorch + CUDA combination
+echo "Installing torch + xformers (cu124)..."
+"$WEBUI_DIR/venv/bin/pip" install torch torchvision xformers --index-url https://download.pytorch.org/whl/cu124
+
+# Pre-install CLIP without dependencies (torch is already installed above)
 echo "Pre-installing CLIP..."
-"$WEBUI_DIR/venv/bin/pip" install --no-build-isolation https://github.com/openai/CLIP/archive/d50d76daa670286dd6cacf3bcd80b5e4823fc8e1.zip
+"$WEBUI_DIR/venv/bin/pip" install --no-build-isolation --no-deps \
+    https://github.com/openai/CLIP/archive/d50d76daa670286dd6cacf3bcd80b5e4823fc8e1.zip
+# Install only CLIP's lightweight dependencies (not torch)
+"$WEBUI_DIR/venv/bin/pip" install ftfy regex tqdm
 
 # ---- Install extensions ----
 echo "Installing Lobe Theme extension..."
