@@ -19,7 +19,7 @@ apt-get update && apt-get install -y --no-install-recommends \
 # ---- Clone A1111 (skip if already present for pod restarts) ----
 if [ ! -d "$WEBUI_DIR" ]; then
     echo "Cloning AUTOMATIC1111 Stable Diffusion WebUI..."
-    git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git "$WEBUI_DIR"
+    git clone -b dev https://github.com/AUTOMATIC1111/stable-diffusion-webui.git "$WEBUI_DIR"
 else
     echo "WebUI already exists, pulling latest changes..."
     cd "$WEBUI_DIR" && git pull
@@ -31,6 +31,8 @@ echo "Configuring webui-user.sh..."
 cat > "$WEBUI_DIR/webui-user.sh" << 'EOF'
 #!/bin/bash
 python_cmd="python3.11"
+# Stability-AI repos were made private (Dec 2025) — use community mirrors
+export STABLE_DIFFUSION_REPO="https://github.com/w-e-w/stablediffusion.git"
 export COMMANDLINE_ARGS="--listen --port 3000 --xformers --enable-insecure-extension-access --no-half-vae --api"
 EOF
 
