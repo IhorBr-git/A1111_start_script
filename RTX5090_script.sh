@@ -49,6 +49,10 @@ echo "Installing build dependencies in venv..."
 echo "Pre-installing CLIP..."
 "$WEBUI_DIR/venv/bin/pip" install --no-build-isolation https://github.com/openai/CLIP/archive/d50d76daa670286dd6cacf3bcd80b5e4823fc8e1.zip
 
+# ---- Install extensions ----
+echo "Installing Lobe Theme extension..."
+git clone https://github.com/lobehub/sd-webui-lobe-theme.git "$WEBUI_DIR/extensions/lobe-theme"
+
 # ---- Clean up ----
 echo "Cleaning up..."
 rm -f /workspace/install_script.sh
