@@ -59,6 +59,11 @@ echo "Pre-installing CLIP..."
 # Install only CLIP's lightweight dependencies (not torch)
 "$WEBUI_DIR/venv/bin/pip" install ftfy regex tqdm
 
+# ---- Download models ----
+echo "Downloading RealitiesEdgeXL Lightning V7 model..."
+wget -q --show-progress -O "$WEBUI_DIR/models/Stable-diffusion/RealitiesEdgeXLLIGHTNING_V7Bakedvae.safetensors" \
+    "https://huggingface.co/Asdsdfaaa/realities/resolve/main/RealitiesEdgeXLLIGHTNING_V7Bakedvae.safetensors"
+
 # ---- Install extensions ----
 echo "Installing Lobe Theme extension..."
 git clone https://github.com/lobehub/sd-webui-lobe-theme.git "$WEBUI_DIR/extensions/lobe-theme"
