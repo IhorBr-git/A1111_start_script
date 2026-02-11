@@ -65,8 +65,10 @@ echo "Pre-installing CLIP..."
 "$WEBUI_DIR/venv/bin/pip" install ftfy regex tqdm
 
 # ---- Install extensions ----
-echo "Installing Lobe Theme extension..."
+echo "Installing extensions..."
 git clone https://github.com/lobehub/sd-webui-lobe-theme.git "$WEBUI_DIR/extensions/lobe-theme"
+git clone https://github.com/thomasasfk/sd-webui-aspect-ratio-helper.git "$WEBUI_DIR/extensions/aspect-ratio-helper"
+git clone https://github.com/Coyote-A/ultimate-upscale-for-automatic1111.git "$WEBUI_DIR/extensions/ultimate-upscale"
 
 # ---- Clean up ----
 echo "Cleaning up..."
