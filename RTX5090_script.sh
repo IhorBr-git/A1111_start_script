@@ -19,7 +19,7 @@ WEBUI_DIR="/workspace/stable-diffusion-webui"
 # ---- Install system dependencies (Debian-based) ----
 echo "Installing system dependencies..."
 apt-get update && apt-get install -y --no-install-recommends \
-    wget git python3 python3-venv libgl1 libglib2.0-0 \
+    wget git python3 python3-venv libgl1 libglib2.0-0 google-perftools \
     && rm -rf /var/lib/apt/lists/*
 
 # ---- Clone A1111 (skip if already present for pod restarts) ----
